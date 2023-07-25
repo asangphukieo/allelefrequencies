@@ -2,6 +2,28 @@
 
 <a href="https://zenodo.org/badge/latestdoi/614108789"><img src="https://zenodo.org/badge/614108789.svg" alt="DOI"></a>
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## **** Update ****
+to add option to select allele frequencies for specific filter
+Usage: python allelefrequencies.py <param> <filter>
+Note: filter now works for HLA genes only!
+
+See reference code for "param" in http://www.allelefrequencies.net/extaccess.asp
+
+Example:
+
+to select allele frequencies for country India
+python allelefrequencies.py country India
+Ouput folder : India/hla/
+
+to select allele frequencies for region Australia
+python allelefrequencies.py region Australia
+Ouput folder : Australia/hla/
+
+
+by Apiwat Sangphukieo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Kamil Slowikowski
 
 2023-06-16
