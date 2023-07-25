@@ -88,7 +88,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import os
+import os,sys
 import pandas as pd
 import re
 import requests
@@ -98,13 +98,13 @@ from tqdm import tqdm
 import gzip
 from glob import glob
 
-def main():
-    download_hla()
-    download_kir()
-    download_cyt()
-    download_mic()
+def main(hla_param,hla_region):
+    download_hla(hla_param,hla_region)
+    #download_kir()
+    #download_cyt()
+    #download_mic()
     # Concatenate all data into a single file
-    files = glob("allelefrequencies.net/*/*.tsv")
+    files = glob(hla_region+"/*/*.tsv")
     dfs = []
     for file in files:
         df = pd.read_csv(file, sep = "\t")
@@ -117,24 +117,33 @@ def main():
     df.insert(0, 'group', df.pop('group'))
     write_tsv(df, "afnd.tsv")
 
-def download_hla():
+def download_hla(hla_param,hla_region):
     out = 'hla'
     base = 'http://www.allelefrequencies.net/hla6006a.asp'
     loci = ['A', 'B', 'C', 'DPA1', 'DPB1', 'DQA1', 'DQB1', 'DRB1']
     for locus in loci:
-        tsv_file = f'allelefrequencies.net/{out}/{locus}.tsv'
+        tsv_file = hla_region+f'/{out}/{locus}.tsv'
         print(tsv_file)
         if not os.path.exists(tsv_file):
-            params = {
-                'hla_locus': locus,
-                'hla_locus_type': 'Classical',
-                'hla_level': '2'
-            }
+            if hla_region != "":
+                params = {
+                    'hla_locus': locus,
+                    'hla_locus_type': 'Classical',
+                    'hla_level': '2',
+                    'hla_'+str(hla_param) : hla_region
+                }
+            else:
+                params = {
+                    'hla_locus': locus,
+                    'hla_locus_type': 'Classical',
+                    'hla_level': '2'
+                }
             url = f'{base}?{urlencode(params)}'
             df = get_all_pages(url)
             df = df[[1,3,4,5,7]]
             df.columns = ['allele', 'population',
                     'indivs_over_n', 'alleles_over_2n', 'n']
+            print(df)
             write_tsv(df, tsv_file)
 
 def download_kir():
@@ -257,5 +266,10 @@ def get_df(bs):
     return df
 
 if __name__ == '__main__':
-    main()
-
+    if len(sys.argv) == 3:
+        #print(sys.argv[1])
+        main(sys.argv[1],sys.argv[2])
+    else:
+        print("Usage: python allelefrequencies.py <param> <hla_region>")
+        print("Note: hla_region now works only HLA genes only!")
+        sys.exit(1)
