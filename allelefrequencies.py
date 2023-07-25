@@ -270,6 +270,6 @@ if __name__ == '__main__':
         #print(sys.argv[1])
         main(sys.argv[1],sys.argv[2])
     else:
-        print("Usage: python allelefrequencies.py <param> <hla_region>")
-        print("Note: hla_region now works only HLA genes only!")
+        print("Usage: python allelefrequencies.py <param> <filter>")
+        print("Note: filter now works only HLA genes only!")
         sys.exit(1)
